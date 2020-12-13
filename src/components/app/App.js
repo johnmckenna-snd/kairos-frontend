@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import CountdownTimer from '../countdown-timer/CountdownTimer';
 
 const App = () => {
@@ -7,6 +7,10 @@ const App = () => {
 	const [hours, setHours] = useState(0);
 	const [minutes, setMinutes] = useState(0);
 	const [seconds, setSeconds] = useState(0);
+
+	const timersState = useRef();
+
+	timersState.current = timers;
 
 	const handleHourChange = (e) => {
 		e.preventDefault();
@@ -30,10 +34,29 @@ const App = () => {
 		const msPerSecond = 1000;
 		const msPerMinute = msPerSecond * 60;
 		const msPerHour = msPerMinute * 60;
+
 		const countdownTime = hours * msPerHour + minutes * msPerMinute + seconds * msPerSecond;
-		const newTimers = [...timers, <CountdownTimer timerKey={timerKey} countdownTime={countdownTime} />];
+		if (countdownTime === 0) return console.log('enter time');
+
+		const newTimers = [...timers, <CountdownTimer key={timerKey} timerKey={timerKey} countdownTime={countdownTime} clearTimer={clearTimer} />];
+		timersState.current = newTimers;
 		setTimerKey(timerKey + 1);
 		setTimers(newTimers);
+		setHours(0);
+		setMinutes(0);
+		setSeconds(0);
+	};
+
+	const clearTimer = (timerKey) => {
+		const currentTimers = timersState.current;
+		console.log('clearTimer(): currentTimers', currentTimers);
+		const findTimerKey = currentTimers.findIndex((timer) => {
+			return timer.props.timerKey === timerKey;
+		});
+		console.log('clearTimer(): findTimerKey', findTimerKey);
+		const removeTimer = currentTimers.splice(findTimerKey, 1);
+		console.log('clearTimer(): removeTimer', removeTimer);
+		setTimers(currentTimers);
 	};
 
 	return (
@@ -46,7 +69,7 @@ const App = () => {
 					min="0"
 					max="24"
 					onChange={handleHourChange}
-					default="0"
+					value={hours}
 				/>
 				<label>minutes</label>
 				<input
@@ -54,7 +77,7 @@ const App = () => {
 					min="0"
 					max="59"
 					onChange={handleMinuteChange}
-					default="0"
+					value={minutes}
 				/>
 				<label>seconds</label>
 				<input
@@ -62,7 +85,7 @@ const App = () => {
 					min="0"
 					max="59"
 					onChange={handleSecondChange}
-					default="0"
+					value={seconds}
 				/>
 			</form>
 			<button onClick={addTimer}>new timer</button>

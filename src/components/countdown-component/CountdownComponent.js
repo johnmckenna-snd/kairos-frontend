@@ -1,5 +1,8 @@
-const CountdownComponent = ({ hours, minutes, seconds, api, completed, timerKey }) => {
+const CountdownComponent = ({ hours, minutes, seconds, api, completed, timerKey, clearTimer }) => {
 	const isPaused = api.isPaused();
+	const handleClear = () => {
+		clearTimer(timerKey);
+	};
 	return (
 		<div key={timerKey}>
 			{completed
@@ -10,6 +13,7 @@ const CountdownComponent = ({ hours, minutes, seconds, api, completed, timerKey 
 				? <button onClick={api.start}>start</button>
 				: <button onClick={api.pause}>pause</button>
 			}
+			<button onClick={handleClear}>clear</button>
 		</div>
 	);
 };

@@ -1,7 +1,7 @@
 import Countdown from 'react-countdown';
 import CountdownComponent from '../countdown-component/CountdownComponent';
 
-const CountdownTimer = ({ timerKey, countdownTime }) => {
+const CountdownTimer = ({ timerKey, countdownTime, clearTimer }) => {
 	const renderer = ({ hours, minutes, seconds, completed, api }) => {
 		return (
 			<CountdownComponent
@@ -11,7 +11,8 @@ const CountdownTimer = ({ timerKey, countdownTime }) => {
 				api={api}
 				completed={completed}
 				timerKey={timerKey}
-			/>
+				clearTimer={clearTimer}
+				/>
 		);
 	};
 	return (
