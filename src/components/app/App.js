@@ -54,9 +54,9 @@ const App = () => {
 			return timer.props.timerKey === timerKey;
 		});
 		console.log('clearTimer(): findTimerKey', findTimerKey);
-		const removeTimer = currentTimers.splice(findTimerKey, 1);
-		console.log('clearTimer(): removeTimer', removeTimer);
-		setTimers(currentTimers);
+		currentTimers.splice(findTimerKey, 1);
+		console.log('clearTimer(): currentTimers', currentTimers);
+		timersState.current = currentTimers
 	};
 
 	return (
@@ -89,7 +89,7 @@ const App = () => {
 				/>
 			</form>
 			<button onClick={addTimer}>new timer</button>
-			{timers}
+			{timersState.current}
 		</div>
 	);
 };
